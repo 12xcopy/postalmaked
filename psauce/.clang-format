@@ -1,0 +1,31 @@
+BasedOnStyle: LLVM
+
+# Indentation
+IndentWidth: 8
+UseTab: Always
+
+# Bracing style
+BreakBeforeBraces: Allman
+BraceWrapping:
+  AfterControlStatement: true
+  AfterFunction: true
+  AfterClass: true
+  BeforeElse: true
+  IndentBraces: false
+
+# Keep control statements clean
+AllowShortIfStatementsOnASingleLine: false
+
+# Include behavior
+# whoever decided this should be default behaviour is stupid
+SortIncludes: false
+IncludeBlocks: Preserve
+
+# Wrapping / formatting long lines
+ColumnLimit: 90
+BinPackArguments: false
+AllowAllArgumentsOnNextLine: false
+AlignAfterOpenBracket: DontAlign
+AlignArrayOfStructures: Left
+AlignConsecutiveAssignments: true
+AllowShortFunctionsOnASingleLine: Inline

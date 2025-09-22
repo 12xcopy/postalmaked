@@ -1,0 +1,3 @@
+{
+    "makefile.compileCommandsPath": "./build/compile_commands.json"
+}

@@ -1,0 +1,14 @@
+build/
+build/*
+working/
+working/*
+
+# garbage
+.cache/*
+*/.cache/*
+
+*.dll
+*.so
+*.sym
+
+compile_commands.json

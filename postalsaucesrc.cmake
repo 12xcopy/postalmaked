@@ -1,0 +1,6 @@
+file(GLOB_RECURSE POSTALSAUCESRC_C psauce/**/*.c psauce/*.c)
+file(GLOB_RECURSE POSTALSAUCESRC_CXX psauce/**/*.cpp psauce/*.cpp)
+set(POSTALSAUCEINC psauce)
+set(POSTALSAUCESRC ${POSTALSAUCESRC_C} ${POSTALSAUCESRC_CXX})
+
+message(STATUS saucesrc=${POSTALSAUCESRC})

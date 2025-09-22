@@ -1,0 +1,10 @@
+thing that need to be done, or just bugs
+
+postalmaked:
+    - TODO: fullscreen / windowed / borderless toggle in menus
+    - TODO: hud stretch toggle. let it stretch fully, or stay at 4:3
+    - BUG: menu blit was disabled. when menus change they dont update the background properly (check menu.cpp)
+
+postalsauce:
+    - TODO: transition the postal's rendering engine to OpenGL
+    - TODO: bullet tracers, similar to redux

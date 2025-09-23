@@ -76,3 +76,7 @@ if(SDL2_FOUND)
     target_include_directories(postalmaked PRIVATE ${SDL2_INCLUDE_DIRS})
     target_link_libraries(postalmaked PRIVATE ${SDL2_LIBRARIES})
 endif()
+
+
+find_package(OpenGL REQUIRED)
+target_link_libraries(postalmaked PRIVATE OpenGL::GL)

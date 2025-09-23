@@ -1,3 +1,11 @@
 {
-    "makefile.compileCommandsPath": "./build/compile_commands.json"
+    "makefile.compileCommandsPath": "./build/compile_commands.json",
+
+    "files.associations": {
+        "psauce/*.hpp": "cpp",
+        "psauce/*.h": "c",
+        // postal likes to use .h for C++ headers
+        "postal/**/*.h": "cpp",
+        "postal/*.h": "cpp",
+    }
 }

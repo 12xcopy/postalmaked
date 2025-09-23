@@ -356,7 +356,7 @@ void RPipeLine::Render(RImage* pimDst,int16_t sDstX,int16_t sDstY,
 			}
 		}
 	}
-
+#include "psauce.hpp"
 // YOU clear the z-buffer before this if you so desire!!!
 // Currently (sDstX,sDstY) allgns with the upper left half of the z-buffer
 // FLAT SHADE MODE
@@ -366,6 +366,12 @@ void RPipeLine::Render(RImage* pimDst,int16_t sDstX,int16_t sDstY,
 		int16_t sOffsetX/* = 0*/,		// In: 2D offset for pimDst and pZB.
 		int16_t sOffsetY/* = 0*/) 	// In: 2D offset for pimDst and pZB.
 	{
+
+		
+		#ifdef PSAUCE_GLTEST_ACTIVE
+		gltest_render_rmesh(sDstX,sDstY,pMesh);
+		return;
+		#endif
 	int32_t i;
 	int32_t v1,v2,v3;
 	uint16_t *psVertex = pMesh->m_pArray;

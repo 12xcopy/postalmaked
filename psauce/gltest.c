@@ -42,6 +42,10 @@ void gltest_preparerender()
 void gltest_postrender()
 {
 	SDL_GL_SwapWindow(two);
+	int w,h;
+	SDL_GetWindowSize(two,&w,&h);
+	//actually the viewport might want to be moved since postal doesnt render at 0,0
+	glViewport(0,0,w,h);
 }
 
 //note: points are already in screen space

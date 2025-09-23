@@ -4817,6 +4817,7 @@ inline void SynchronousSampleAbortion(void)
 		}
 	}
 
+#include "psauce.hpp"
 
 ////////////////////////////////////////////////////////////////////////////////
 //
@@ -5168,7 +5169,7 @@ extern int16_t Play(										// Returns 0 if successfull, non-zero otherwise
 
 
 										// Render:
-
+										gltest_preparerender();
 										// This requires access to the composite buffer so lock it down.
 										rspLockBuffer();
 										//This is where we process 'previous' input
@@ -5181,6 +5182,7 @@ extern int16_t Play(										// Returns 0 if successfull, non-zero otherwise
 
 										// Draw to the screen.
 										playgroup.CoreLoopDraw(&info);
+										gltest_postrender();
 
 										// Check if core loop is done
 										} while (!playgroup.IsCoreLoopDone(&info));

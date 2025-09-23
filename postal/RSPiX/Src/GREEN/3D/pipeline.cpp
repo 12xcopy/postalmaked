@@ -37,6 +37,11 @@ int32_t RPipeLine::ms_lNumPts = 0;
 int32_t	RPipeLine::ms_lNumPipes = 0;
 
 RP3d*  RPipeLine::ms_pPts = NULL;
+extern "C"
+{
+	// for psauce to be able to interact with it
+	RP3d*  ms_pPts2;
+}
 
 RPipeLine::RPipeLine()
 	{
@@ -367,10 +372,11 @@ void RPipeLine::Render(RImage* pimDst,int16_t sDstX,int16_t sDstY,
 		int16_t sOffsetY/* = 0*/) 	// In: 2D offset for pimDst and pZB.
 	{
 
-		
+
 		#ifdef PSAUCE_GLTEST_ACTIVE
+		ms_pPts2 = ms_pPts;
 		gltest_render_rmesh(sDstX,sDstY,pMesh);
-		return;
+		//return;
 		#endif
 	int32_t i;
 	int32_t v1,v2,v3;

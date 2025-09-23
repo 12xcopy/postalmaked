@@ -597,22 +597,33 @@ class RString
 		friend int operator==(const char* rhs, const RString& lhs);
 	};
 
+// this is a hack to fix a weird bug that happens a third of the time while debugging
+	inline int newstrcmp(const RString& a,const RString& b)
+	{
+		if (&a < (void*)0x100)
+		{
+			//this isnt right
+			printf("Warning: rstring corruption detected");
+			return 9999;
+		}
+		return strcmp(a,b);
+	}
 
 ////////////////////////////////////////////////////////////////////////////////
 // RString -vs- RString
 ////////////////////////////////////////////////////////////////////////////////
 inline int operator==(const RString& lhs, const RString& rhs)
-	{ if (strcmp(lhs, rhs) == 0) return 1; return 0; }
+	{ if (newstrcmp(lhs, rhs) == 0) return 1; return 0; }
 inline int operator!=(const RString& lhs, const RString& rhs)
-	{ if (strcmp(lhs, rhs) != 0) return 1; return 0; }
+	{ if (newstrcmp(lhs, rhs) != 0) return 1; return 0; }
 inline int operator<=(const RString& lhs, const RString& rhs)
-	{ if (strcmp(lhs, rhs) <= 0) return 1; return 0; }
+	{ if (newstrcmp(lhs, rhs) <= 0) return 1; return 0; }
 inline int operator>=(const RString& lhs, const RString& rhs)
-	{ if (strcmp(lhs, rhs) >= 0) return 1; return 0; }
+	{ if (newstrcmp(lhs, rhs) >= 0) return 1; return 0; }
 inline bool operator<(const RString& lhs, const RString& rhs)
-	{ if (strcmp(lhs, rhs) < 0) return true; return false; }
+	{ if (newstrcmp(lhs, rhs) < 0) return true; return false; }
 inline int operator>(const RString& lhs, const RString& rhs)
-	{ if (strcmp(lhs, rhs) > 0) return 1; return 0; }
+	{ if (newstrcmp(lhs, rhs) > 0) return 1; return 0; }
 
 ////////////////////////////////////////////////////////////////////////////////
 // RString -vs- const char*

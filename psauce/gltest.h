@@ -18,6 +18,14 @@ struct gltest_mesh_s
 	uint16_t* m_pArray;	
 };
 
+struct gltest_point_s
+{
+	float v[4];
+};
+
 
 void gltest_render(int x, int y,struct gltest_mesh_s* mesh);
 #define gltest_render_rmesh(x,y,MESH) gltest_render(x,y,reinterpret_cast<struct gltest_mesh_s*>(MESH))
+
+void gltest_preparerender();
+void gltest_postrender();

@@ -5,6 +5,7 @@
 #include <SDL_video.h>
 
 #include "gltest.h"
+//note: animations have a GetAtTime 
 
 extern struct gltest_point_s*  ms_pPts2;
 
@@ -16,7 +17,7 @@ static SDL_Window* two;
 static void* glx;
 void gltest_init()
 {
-	two = SDL_CreateWindow("GL Test",8,8,400,300,SDL_WINDOW_OPENGL);
+	two = SDL_CreateWindow("GL Test",8,8,400,300,SDL_WINDOW_OPENGL | SDL_WINDOW_RESIZABLE);
 	SDL_ShowWindow(two);
 	glx = SDL_GL_CreateContext(two);
 	SDL_GL_MakeCurrent(two,glx);
@@ -43,6 +44,9 @@ void gltest_postrender()
 	SDL_GL_SwapWindow(two);
 }
 
+//note: points are already in screen space
+
+// This is to be converted to modern gl later
 void gltest_render(int x, int y,struct gltest_mesh_s* mesh)
 {
 	int loldebugbreak = 1;
@@ -53,7 +57,7 @@ void gltest_render(int x, int y,struct gltest_mesh_s* mesh)
 	uint16_t* indecies = mesh->m_pArray;
 
 
-	int rawset_len = trico/3;
+	int rawset_len = trico;
 
 	for (int i=0;i<rawset_len;i++)
 	{

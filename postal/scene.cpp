@@ -832,9 +832,9 @@ if (g_bSceneDontBlit == false)
 			ps3Cur->m_sRenderOffX		= sRenderOffX;
 			ps3Cur->m_sRenderOffY		= sRenderOffY;
 			}
-
+			bool allow_indirect_render = 0;
 		// If only partially on screen . . .
-		if (sClipLeft > 0 || sClipTop > 0 || sClipRight > 0 || sClipBottom > 0)
+		if (allow_indirect_render && (sClipLeft > 0 || sClipTop > 0 || sClipRight > 0 || sClipBottom > 0))
 			{
 			ASSERT(m_pipeline.m_pimClipBuf != NULL);
 			// Use clip image.

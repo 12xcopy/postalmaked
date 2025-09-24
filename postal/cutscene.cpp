@@ -687,7 +687,7 @@ static CSwirlMe* pSwirl = NULL;
 ////////////////////////////////////////////////////////////////////////////////
 
 static void CutScene_RFileCallback(int32_t lBytes);
-
+#include "psauce.hpp"
 ////////////////////////////////////////////////////////////////////////////////
 //
 // Start cutscene.
@@ -713,6 +713,7 @@ extern void CutSceneStart(
 	{
 	// This is used for more than just paths, so it has a larger size!
 	char szText[2048];
+	pgamemode_set(POSTAL_GAMEMODE_LevelCutscene);
 
 	// Init stuff
 	ms_pCut = new CCutSceneInfo;
@@ -965,6 +966,35 @@ extern void CutSceneStart(
 	print.print(0, TEXT_Y, ms_pCut->m_szText);
 
 	ms_pCut->m_pimTextLayer->Convert(RImage::FSPR8);
+
+	//update pgamemode
+	struct pcutscene_s cd = {0};
+	strncpy(cd.title,ms_pCut->m_szTitle,sizeof(cd.title));
+	strncpy(cd.text,ms_pCut->m_szText,sizeof(cd.text));
+	char* bgname = szText; //yeah
+	const char* rcut = "res/cutscene/";
+	bgname = strstr(szText,rcut);
+	if (bgname)
+	{
+		bgname = szText + strlen(rcut);
+	}
+	else
+	{
+		bgname = szText;
+	}
+	strncpy(cd.background,bgname,sizeof(cd.text));
+	const char* musn = "music/";
+	bgname = strstr(ms_pCut->m_szMusic,musn);
+	if (bgname)
+	{
+		bgname = ms_pCut->m_szMusic + strlen(musn);
+	}
+	else
+	{
+		bgname = ms_pCut->m_szMusic;
+	}
+	strncpy(cd.audio,bgname,sizeof(cd.text));
+	pgamemode_getdata()->LevelCutscene.pcutscene = cd;
 
 	//------------------------------------------------------------------------------
 	// Update the actual screen now that everything is ready

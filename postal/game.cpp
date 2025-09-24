@@ -2837,7 +2837,7 @@ static int16_t LoadAssets(void)
 
 		UpdateSystem();
 
-		DoTitle(lTime - lLastTime);
+		DoTitle(lTime - lLastTime,&lEndTime);
 
 		lLastTime	= lTime;
 

@@ -584,7 +584,7 @@ extern int16_t TitleGetNumTitles(void)
 //
 ////////////////////////////////////////////////////////////////////////////////
 extern int16_t DoTitle(						// Returns 0 if successfull, non-zero otherwise
-	int32_t lUnits)								// In:  Additional progess units
+	int32_t lUnits,int32_t* endtimeptr)								// In:  Additional progess units
 	{
 	int16_t sResult = 0;
 
@@ -602,6 +602,11 @@ extern int16_t DoTitle(						// Returns 0 if successfull, non-zero otherwise
 		pgamemode_set(POSTAL_GAMEMODE_TitleSequence);
 
 		int skip = pgamemode_skip_title(0);
+		if (skip && endtimeptr)
+		{
+			//end faster
+			*endtimeptr -= g_GameSettings.m_alTitleDurations[ms_sImageNum];
+		}
 		// While we've passed the duration before displaying the next image.
 		// This loop is intended to skip title cards that have 0 for their
 		// duration.
@@ -654,7 +659,7 @@ extern int16_t EndTitle(void)				// Returns 0 if successfull, non-zero otherwise
 		TRACE("EndTitle(): lTotalUnits = %ld, lCummUnits = %ld\n", m_lTotalUnits, m_lCummUnits);
 
 		// Always pretend we made it, even if we didn't.
-		DoTitle(ABS(m_lTotalUnits - m_lCummUnits) );
+		DoTitle(ABS(m_lTotalUnits - m_lCummUnits),0 );
 
 		// Lock the RSPiX composite buffer so we can access it.
 		rspLockBuffer();

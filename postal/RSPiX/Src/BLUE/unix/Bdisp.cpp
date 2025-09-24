@@ -682,8 +682,6 @@ extern int16_t rspSetVideoMode(	// Returns 0 if successfull, non-zero otherwise
         if ((!rspCommandLine("windowed") && 
 		#if defined(DEBUG)
 		0
-		#else
-		1
 		#endif
 	))
         {

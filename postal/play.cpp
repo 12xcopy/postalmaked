@@ -375,6 +375,9 @@
 #include "steam/steam_api.h"
 #endif
 
+
+#include "psauce.hpp"
+
 //#define RSP_PROFILE_ON
 //#include "ORANGE/Debug/profile.h"
 
@@ -2787,9 +2790,10 @@ class CPlayInput : public CPlay
 						{
 						// If playing back a demo and there's any input, then ignore the input and end the demo
 						//if ((GetInputMode() == INPUT_MODE_PLAYBACK) && (pie->type != RInputEvent::None))
-						if ((GetInputMode() == INPUT_MODE_PLAYBACK) && (pie->type == RInputEvent::Key))
+						if ((GetInputMode() == INPUT_MODE_PLAYBACK))
 							{
-							pinfo->SetGameState_GameAborted();
+								if (pgamemode_skip_demo(0))
+									pinfo->SetGameState_GameAborted();
 							}
 						else
 							{
@@ -4754,8 +4758,13 @@ class CPlayCutscene : public CPlay
 					{
 					CutSceneUpdate();
 					UpdateSystem();
+					#if 0
 					if (((rspGetNextInputEvent(&ie) == 1) && (ie.type == RInputEvent::Key))
 						|| IsXInputButtonPressed())
+						#else
+						pgamemode_set(POSTAL_GAMEMODE_LevelCutscene);
+						if (pgamemode_skip_cutscene(0))
+						#endif
 						break;
 					}
 				}
@@ -4818,6 +4827,7 @@ inline void SynchronousSampleAbortion(void)
 	}
 
 
+
 ////////////////////////////////////////////////////////////////////////////////
 //
 // Play game using specified settings.
@@ -4877,6 +4887,7 @@ extern int16_t Play(										// Returns 0 if successfull, non-zero otherwise
 
 	// Set input mode
 	SetInputMode(inputMode);
+
 
 	// Reset AI logging feature to avoid potential multiplayer/demo sync problems
 	CPerson::ResetLogAI();
@@ -5049,6 +5060,9 @@ extern int16_t Play(										// Returns 0 if successfull, non-zero otherwise
 #endif
 								// End the cutscene
 								playgroup.EndCutscene(&info);
+
+								pgamemode_set(POSTAL_GAMEMODE_Level);
+								pgamemode_getdata()->Level.is_demo = inputMode == INPUT_MODE_PLAYBACK;
 								// If multiplayer mode, set up the scoring mode from
 								// the flags passed into play.
 								if (pclient)

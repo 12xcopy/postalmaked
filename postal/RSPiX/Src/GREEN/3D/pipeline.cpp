@@ -381,7 +381,10 @@ void RPipeLine::Render(RImage* pimDst,int16_t sDstX,int16_t sDstY,
 
 		#ifdef PSAUCE_GLTEST_ACTIVE
 		ms_pPts2 = ms_pPts;
-		gltest_render_rmesh(sDstX,sDstY,pMesh);
+		gltest_meshmeta_s meta;
+		meta.colors_elements = pTexColors->m_pIndices;
+		meta.colors = pTexColors->m_pColors;
+		gltest_render_rmesh_meta(sDstX,sDstY,pMesh,meta);
 		//return;
 		#endif
 	int32_t i;

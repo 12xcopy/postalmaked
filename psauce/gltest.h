@@ -23,9 +23,18 @@ struct gltest_point_s
 	float v[4];
 };
 
+struct gltest_meshmeta_s
+{
+	/* pallete entries */
+	uint8_t* colors_elements;
+	void* colors;
+};
+
 
 void gltest_render(int x, int y,struct gltest_mesh_s* mesh);
+void gltest_renderwm(int x, int y,struct gltest_mesh_s* mesh,struct gltest_meshmeta_s* meta);
 #define gltest_render_rmesh(x,y,MESH) gltest_render(x,y,reinterpret_cast<struct gltest_mesh_s*>(MESH))
+#define gltest_render_rmesh_meta(x,y,MESH,meta) gltest_renderwm(x,y,reinterpret_cast<struct gltest_mesh_s*>(MESH),&meta)
 
 void gltest_preparerender();
 void gltest_postrender();

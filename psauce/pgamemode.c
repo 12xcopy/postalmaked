@@ -1,4 +1,5 @@
 #include "pgamemode.h"
+#include "postalrenwrap.h"
 #include <stdio.h>
 #include <string.h>
 
@@ -24,10 +25,26 @@ static const char *gamemodenames[] = {
 
 void pgamemode_set(int nu)
 {
+	int oldgamemode = GPGamemode;
 	if (nu != GPGamemode)
 	{
 		printf("pgamemode is NOW %i (%s)\n", nu, gamemodenames[nu]);
 		memset(&PGM, 0, sizeof(PGM));
+
+		if (oldgamemode == POSTAL_GAMEMODE_Level)
+		{
+			switch(nu)
+			{
+				case POSTAL_GAMEMODE_LevelCutscene: //made it to the next level, or died
+				case POSTAL_GAMEMODE_LevelCutscene_Loading:
+				case POSTAL_GAMEMODE_MenuScreens: //gave up, LOL!
+				{
+					//unload level rendering stuff
+					psauc_ResetRender();
+				}
+				default:
+			}
+		}
 	}
 	GPGamemode = nu;
 }

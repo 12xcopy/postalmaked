@@ -323,7 +323,7 @@
 #include "game.h"
 #include "alphablitforpostal.h"
 #include "reality.h"
-
+#include "psauce.hpp"
 
 ////////////////////////////////////////////////////////////////////////////////
 // Macros/types/etc.
@@ -571,6 +571,9 @@ CScene::Render3D(
 	CHood*		phood,			// Da hood, homey.
 	RRect*		prcDstClip)		// Dst clip rect.
 	{
+	psauc_NotifyScene(this);
+	psauc_NotifyHood(phood);
+	//gltest_preparerender();
 	RAlpha* palphaLight;
 	// If high intensity indicated . . .
 	if (ps3Cur->m_sInFlags & CSprite::InHighIntensity)

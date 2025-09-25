@@ -38,3 +38,6 @@ void gltest_renderwm(int x, int y,struct gltest_mesh_s* mesh,struct gltest_meshm
 
 void gltest_preparerender();
 void gltest_postrender();
+
+void gltest_render_background();
+void gltest_unload_scene();

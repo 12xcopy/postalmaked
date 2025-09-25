@@ -3861,6 +3861,8 @@ class CPlayRealm : public CPlay
 				// Set hood's palette.
 				prealm->m_phood->SetPalette();
 
+				psauc_NotifyCamera(pinfo->Camera());
+
 				// Setup initial film scaling
 				ScaleFilm(pinfo, false);
 
@@ -3940,6 +3942,8 @@ class CPlayRealm : public CPlay
 					prealm->Update();
 
 					// Prepare Realm for rendering (Snap()).
+					
+					// Note: this only renders sprites inside of the realm
 					prealm->Render();
 
 					// In demo mode (record or playback) we don't draw the results of the frame if
@@ -3998,7 +4002,7 @@ class CPlayRealm : public CPlay
 					}
 
 				// If not in menu . . .
-				if (pinfo->m_bInMenu == false)
+				if (pinfo->m_bInMenu == false || 1)
 					{
 					// If we should draw the frame . . .
 					if (pinfo->m_bDrawFrame)
@@ -4852,6 +4856,7 @@ extern int16_t Play(										// Returns 0 if successfull, non-zero otherwise
 	RFile* pfileDemoModeDebugMovie)					// In:  File for loading/saving demo mode debug movie
 	{
 	int16_t sResult = 0;
+		psauc_ResetRender();
 
 //#ifdef MOBILE
 	if (inputMode == INPUT_MODE_PLAYBACK)

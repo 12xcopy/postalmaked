@@ -10,4 +10,5 @@ extern "C"
 	#include "glwrap.h"
 	#include "gltest.h"
 }
+#include "postalrenwrap.h"
 #endif

@@ -582,6 +582,7 @@
 #include "credits.h"
 
 #include "CompileOptions.h"
+#include "psauce.hpp"
 
 ////////////////////////////////////////////////////////////////////////////////
 // Macros/types/etc.
@@ -2791,7 +2792,7 @@ static void CloseSaks(void)
 	g_resmgrRes.CloseSak();
 	}
 
-#include "psauce.hpp"
+
 ////////////////////////////////////////////////////////////////////////////////
 //
 // Load game data that we want around the entire game.

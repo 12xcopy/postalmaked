@@ -45,13 +45,19 @@ void gltest_preparerender()
 		gltest_init();
 	}
 	SDL_GL_MakeCurrent(two, glx);
+
+	int w, h;
+	SDL_GetWindowSize(two, &w, &h);
+	// actually the viewport might want to be moved since postal doesnt render at 0,0
+	glViewport(0, 0, w, h);
 	glClearColor(0.4, 0, 0, 1.0);
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	glClear(GL_DEPTH_BUFFER_BIT);
+	glClear(GL_COLOR_BUFFER_BIT);
 
 	// disable backface culling
 	glDisable(GL_CULL_FACE);
 	glEnable(GL_DEPTH_TEST);
-	glDepthMask(GL_TRUE);  
+	glDepthMask(GL_TRUE);
 	glClearDepth(0.0);
 
 	if (DEPTH_DRAW)
@@ -64,15 +70,13 @@ void gltest_preparerender()
 	}
 
 	psaucGetPaletteEntries(0, 256, PAL_r, PAL_g, PAL_b, 1);
+
+	gltest_render_background();
 }
 
 void gltest_postrender()
 {
 	SDL_GL_SwapWindow(two);
-	int w, h;
-	SDL_GetWindowSize(two, &w, &h);
-	// actually the viewport might want to be moved since postal doesnt render at 0,0
-	glViewport(0, 0, w, h);
 }
 
 struct renderdata
@@ -245,4 +249,120 @@ void gltest_render(int x, int y, struct gltest_mesh_s *mesh)
 	struct renderdata rd;
 	rd.meta = 0;
 	gltest_render_internal(x, y, mesh, rd);
+}
+
+void *current_bg;
+
+typedef struct __attribute__((packed)) /* scary! */
+{
+	uint8_t r;
+	uint8_t g;
+	uint8_t b;
+} RGB_t;
+
+RGB_t *current_bg_converted;
+unsigned bgtex;
+void gltest_render_background()
+{
+	int w, h;
+	int pitch;
+	uint8_t *img;
+	int ret = gltest_getHoodBackground(&w, &h, &img, &pitch);
+	if (ret)
+		return; // cannot render at this time
+
+	if (current_bg != img)
+	{
+		current_bg = img;
+		if (current_bg_converted)
+			free(current_bg_converted);
+		current_bg_converted = malloc(w * h * sizeof(RGB_t));
+		if (!current_bg_converted)
+		{
+			//oh well
+			fprintf(stderr,"malloc failed!");
+			abort();
+		}
+		memset(current_bg_converted, 0, w * h * sizeof(RGB_t));
+		int ccap = w * h;
+#if 1
+		//BMP8 to RGB888
+		for (int r = 0; r < h; r++)
+		{
+			for (int c = 0; c < w; c++)
+			{
+				uint8_t index	    = img[r * pitch + c];
+				ARGB_t argb	    = palindex_to_argb(index);
+				union ARGB_u argb_u = *(union ARGB_u *)&argb;
+				current_bg_converted[r * w + c].r = argb_u.col.r;
+				current_bg_converted[r * w + c].g = argb_u.col.g;
+				current_bg_converted[r * w + c].b = argb_u.col.b;
+			}
+		}
+#else
+		for (int i = 0; i < ccap; i++)
+		{
+			ARGB_t argb		   = 0;
+			union ARGB_u argb_u	   = *(union ARGB_u *)&argb;
+			argb_u.col.a		   = 255;
+			argb_u.col.r		   = i % 4;
+			argb_u.col.g		   = i;
+			argb_u.col.b		   = (i + 159) * 20;
+			int no			   = i;
+			current_bg_converted[no].r = argb_u.col.r;
+			current_bg_converted[no].g = argb_u.col.g;
+			current_bg_converted[no].b = argb_u.col.b;
+		}
+#endif
+		if (bgtex)
+			glDeleteTextures(1, &bgtex);
+		glGenTextures(1, &bgtex);
+		glBindTexture(GL_TEXTURE_2D, bgtex);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+		glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+		glTexImage2D(GL_TEXTURE_2D,
+		    0,
+		    GL_RGB,
+		    w,
+		    h,
+		    0,
+		    GL_RGB,
+		    GL_UNSIGNED_BYTE,
+		    current_bg_converted);
+	}
+	glEnable(GL_TEXTURE_2D);
+	glDepthMask(GL_FALSE);
+	glBindTexture(GL_TEXTURE_2D, bgtex);
+
+	glBegin(GL_TRIANGLE_FAN);
+	glColor3f(1.0, 1.0, 1.0);
+
+	glTexCoord2f(0, 0);
+	glVertex2f(-1, -1);
+
+	glTexCoord2f(1, 0);
+	glVertex2f(1, -1);
+
+	glTexCoord2f(1, -1);
+	glVertex2f(1, 1);
+
+	glTexCoord2f(0, -1);
+	glVertex2f(-1, 1);
+
+	glEnd();
+
+	glDepthMask(GL_TRUE);
+	glDisable(GL_TEXTURE_2D);
+}
+
+
+void gltest_unload_scene()
+{
+	current_bg = 0;
+	free(current_bg_converted);
+	current_bg_converted=0;
+	glDeleteTextures(1,&bgtex);
+	bgtex=0;
 }

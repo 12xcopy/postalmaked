@@ -1,10 +1,16 @@
 thing that need to be done, or just bugs
 
-postalmaked:
+    - TODO: GL: need to intercept mesh rendering before points are converted to screen space
+    - TODO: GL: there has to be a render matrix somewhere, need to convert that to a glsl shader. need all rendering stuff to be done on the gpu
+    - TODO: GL: once most features have been implemented, convert them to modern GL.
+    - BUG: GL: colors only work on unshaded models
+
     - TODO: fullscreen / windowed / borderless toggle in menus
     - TODO: hud stretch toggle. let it stretch fully, or stay at 4:3
+    - TODO: update hoodcraft to python3 fully. let that whole system be built using cmake
+
     - BUG: menu blit was disabled. when menus change they dont update the background properly (check menu.cpp)
 
-postalsauce:
-    - TODO: transition the postal's rendering engine to OpenGL
-    - TODO: bullet tracers, similar to redux
+    - BUG: game crashes on level load 1/3 of the time. seems to be related to std::map
+    - BUG: asset loading seems to be using undefined behaviour somewhere. VERY rarely audio will be a glitchy nightmare. look into this
+    - BUG: SDL_Audio crashes on startup sometimes

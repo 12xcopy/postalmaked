@@ -19,6 +19,7 @@ static const char *gamemodenames[] = {
     "POSTAL_GAMEMODE_LevelCutscene_Loading",
     "POSTAL_GAMEMODE_LevelCutscene",
     "POSTAL_GAMEMODE_Level",
+    "POSTAL_GAMEMODE_LevelScreens",
 };
 
 void pgamemode_set(int nu)

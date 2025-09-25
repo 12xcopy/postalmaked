@@ -9,6 +9,7 @@ enum
     POSTAL_GAMEMODE_LevelCutscene_Loading, //progress bar screen
     POSTAL_GAMEMODE_LevelCutscene,
     POSTAL_GAMEMODE_Level,
+    POSTAL_GAMEMODE_LevelScreens,
 };
 
 

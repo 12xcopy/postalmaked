@@ -552,7 +552,7 @@ extern int16_t StartMenu(				// Returns 0 on success.
 	// If there is a new menu . . .
 	if (pmenu != NULL)
 		{
-		pgamemode_set(POSTAL_GAMEMODE_MenuScreens);
+		
         rspKeyRepeat(true);
 
 		U32	u32TextColor;

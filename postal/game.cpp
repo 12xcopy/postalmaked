@@ -1456,7 +1456,7 @@ static int16_t GameCore(void)		// Returns 0 on success.
 			// If paltran requested . . .
 			if (bPalTran)
 				PalTranOn();
-
+			pgamemode_set(POSTAL_GAMEMODE_MenuScreens);
 			sResult = StartMenu(pmenuStart ? pmenuStart : &menuMain, &g_resmgrShell, g_pimScreenBuf);
 			if (sResult == 0)
 				{

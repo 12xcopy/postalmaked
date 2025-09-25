@@ -3425,7 +3425,7 @@ class CPlayInput : public CPlay
 			menuAudioOptions.ami[2].sEnabled	= FALSE;
 			// Disable 'Save' IF in multiplayer.
 			menuClientGame.ami[1].sEnabled = (pinfo->IsMP() == true) ? FALSE : TRUE;
-
+			pgamemode_set(POSTAL_GAMEMODE_LevelScreens);
 			// Start the menu
 			if (::StartMenu(&menuClientGame, &g_resmgrShell, g_pimScreenBuf) == 0)
 				{

@@ -8,6 +8,9 @@
 #include "postalrenwrap.h"
 // note: animations have a GetAtTime
 
+// note: when disabling software rendering, dont just remove "Render" cause some stuffs
+// use bones for positioning
+
 extern struct gltest_point_s *ms_pPts2;
 
 typedef struct gltest_point_s pt_t;
@@ -262,6 +265,8 @@ typedef struct __attribute__((packed)) /* scary! */
 
 RGB_t *current_bg_converted;
 unsigned bgtex;
+int bgw;
+int bgh;
 void gltest_render_background()
 {
 	int w, h;
@@ -270,7 +275,8 @@ void gltest_render_background()
 	int ret = gltest_getHoodBackground(&w, &h, &img, &pitch);
 	if (ret)
 		return; // cannot render at this time
-
+	bgw = w;
+	bgh = h;
 	if (current_bg != img)
 	{
 		current_bg = img;
@@ -279,14 +285,16 @@ void gltest_render_background()
 		current_bg_converted = malloc(w * h * sizeof(RGB_t));
 		if (!current_bg_converted)
 		{
-			//oh well
-			fprintf(stderr,"malloc failed!");
+			// oh well
+			fprintf(stderr, "malloc failed!");
 			abort();
 		}
 		memset(current_bg_converted, 0, w * h * sizeof(RGB_t));
 		int ccap = w * h;
-#if 1
-		//BMP8 to RGB888
+
+		// BMP8 to RGB888
+		// works for all postal 1 maps, dont know if anyone doesnt use bmp8 for
+		// maps
 		for (int r = 0; r < h; r++)
 		{
 			for (int c = 0; c < w; c++)
@@ -299,21 +307,7 @@ void gltest_render_background()
 				current_bg_converted[r * w + c].b = argb_u.col.b;
 			}
 		}
-#else
-		for (int i = 0; i < ccap; i++)
-		{
-			ARGB_t argb		   = 0;
-			union ARGB_u argb_u	   = *(union ARGB_u *)&argb;
-			argb_u.col.a		   = 255;
-			argb_u.col.r		   = i % 4;
-			argb_u.col.g		   = i;
-			argb_u.col.b		   = (i + 159) * 20;
-			int no			   = i;
-			current_bg_converted[no].r = argb_u.col.r;
-			current_bg_converted[no].g = argb_u.col.g;
-			current_bg_converted[no].b = argb_u.col.b;
-		}
-#endif
+
 		if (bgtex)
 			glDeleteTextures(1, &bgtex);
 		glGenTextures(1, &bgtex);
@@ -336,19 +330,29 @@ void gltest_render_background()
 	glDepthMask(GL_FALSE);
 	glBindTexture(GL_TEXTURE_2D, bgtex);
 
+	int cam_w, cam_h, cam_posx, cam_posy;
+	gltest_camera(&cam_w, &cam_h, &cam_posx, &cam_posy);
+	if (!cam_w || !cam_h)
+		return;
+	float pixel_x = 1.0f / (float)bgw;
+	float pixel_y = 1.0f / (float)bgh;
+
+	float uvx = (cam_posx) * pixel_x;
+	float uvy = ((-cam_posy) + (cam_h * -1)) * pixel_y;
+
+	float spanx = uvx + ((float)cam_w / (float)bgw);
+	float spany = uvy + ((float)cam_h / (float)bgh);
+
 	glBegin(GL_TRIANGLE_FAN);
 	glColor3f(1.0, 1.0, 1.0);
 
-	glTexCoord2f(0, 0);
+	glTexCoord2f(uvx, 1.0 - uvy);
 	glVertex2f(-1, -1);
-
-	glTexCoord2f(1, 0);
+	glTexCoord2f(spanx, 1.0 -uvy);
 	glVertex2f(1, -1);
-
-	glTexCoord2f(1, -1);
+	glTexCoord2f(spanx, 1.0 -spany);
 	glVertex2f(1, 1);
-
-	glTexCoord2f(0, -1);
+	glTexCoord2f(uvx, 1.0 -spany);
 	glVertex2f(-1, 1);
 
 	glEnd();
@@ -357,12 +361,11 @@ void gltest_render_background()
 	glDisable(GL_TEXTURE_2D);
 }
 
-
 void gltest_unload_scene()
 {
 	current_bg = 0;
 	free(current_bg_converted);
-	current_bg_converted=0;
-	glDeleteTextures(1,&bgtex);
-	bgtex=0;
+	current_bg_converted = 0;
+	glDeleteTextures(1, &bgtex);
+	bgtex = 0;
 }

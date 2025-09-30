@@ -16,6 +16,7 @@ void psaucSetPaletteEntries(int16_t sStartIndex, int16_t sCount, uint8_t *pucRed
     uint8_t *pucGreen, uint8_t *pucBlue, int32_t lIncBytes);
 
 int gltest_getHoodBackground(int* w,int* h,uint8_t** image,int* pitch);
+int gltest_camera(int* w,int* h,int* posx,int* posy);
 
 void psauc_ResetRender();
 

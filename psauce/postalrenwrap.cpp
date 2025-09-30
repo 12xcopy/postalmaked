@@ -1,6 +1,8 @@
 #include <inttypes.h>
 #include "postalrenwrap.h"
 #include "scene.h"
+#include "camera.h"
+#include "hood.h"
 extern "C"
 {
 	#include "gltest.h"
@@ -57,4 +59,15 @@ void psauc_ResetRender()
 	pcamera=0;
 	phood=0;
 	gltest_unload_scene();
+}
+
+
+int gltest_camera(int* w,int* h,int* posx,int* posy)
+{
+	if (!pcamera) return 1;
+	*posx = pcamera->m_sSceneViewX;
+	*posy = pcamera->m_sSceneViewY;
+	*w = pcamera->m_sViewW;
+	*h = pcamera->m_sViewH;
+	return 0;
 }
